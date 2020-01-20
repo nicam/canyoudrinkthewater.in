@@ -16,24 +16,26 @@
       background-color: #0984e3;
       transition: background-color 0.5s linear;
       color: white;
+      margin: 10px;
     }
     h1 { font-size: 90px; margin: 0; }
-    h2 { font-size: 30px; margin: 10px 0 0 0; }
+    h2 { font-size: 30px; margin: 10px 0 10px 0; }
     body.yes { background-color: #2ecc71; }
     body.no { background-color: #e74c3c; }
     body.not-found { background-color: #ffeaa7; }
     .icon { width: 70px; height: auto; }
     .drop { display: flex; align-items: center; justify-content: center; }
     .searchbar { margin-top: 25px; }
+    .box { min-height: 190px; }
     #app { max-width: 400px; margin: 0 auto; text-align: center; }
   </style>
 </head>
 <body>
   <div id="app">
     <h1 v-if="hit && !entry">Country not found</h1>
-    <h2 v-if="!hit">Can you drink the water in {{searchString}}?</h2>
-    <div v-if="entry">
-      <h2>{{ searchString }}?</h2>
+    <h2 v-if="!hit" class="box">Can you drink the water in {{searchString}}?</h2>
+    <div v-if="entry" class="box">
+      <h2>Can you drink the water in {{searchString}}?</h2>
       <div class="drop" v-if="entry.Drinkable">
         <svg class="icon" height="512pt" viewBox="-67 0 512 512" width="512pt" xmlns="http://www.w3.org/2000/svg"><path d="m189.140625 512c-61.4375 0-117.308594-28.566406-153.269531-78.378906-47.828125-66.21875-47.828125-155.191406 0-221.398438l153.269531-212.222656 153.273437 212.242188c47.828126 66.203124 47.828126 155.175781 0 221.394531-35.960937 49.796875-91.832031 78.363281-153.273437 78.363281zm0 0" fill="#40a2e7"/><path d="m189.140625 447.410156c-40.433594 0-77.214844-18.796875-100.9375-51.574218-15.46875-21.410157-23.636719-46.617188-23.636719-72.9375l.046875-3.699219 32.296875.953125-.050781 2.746094c0 19.472656 6.054687 38.15625 17.519531 54.011718 17.554688 24.269532 44.792969 38.191406 74.761719 38.191406 9.511719 0 18.75-1.375 27.484375-4.101562l9.625 30.824219c-11.855469 3.714843-24.335938 5.585937-37.109375 5.585937zm-87.339844-154.191406-30.597656-10.382812c3.988281-11.691407 9.703125-22.75 17-32.84375l26.175781 18.925781c-5.425781 7.492187-9.65625 15.664062-12.578125 24.300781zm0 0" fill="#fff"/><path d="m342.414062 385.179688c-35.976562 49.796874-91.847656 78.378906-153.273437 78.378906-61.421875 0-117.308594-28.566406-153.269531-78.378906-18.925782-26.191407-30.226563-55.96875-34.183594-86.484376-6.023438 46.582032 5.28125 94.914063 34.183594 134.925782 35.976562 49.796875 91.847656 78.378906 153.269531 78.378906 61.425781 0 117.3125-28.566406 153.273437-78.378906 28.902344-40.011719 40.207032-88.328125 34.183594-134.925782-3.941406 30.515626-15.261718 60.292969-34.183594 86.484376zm0 0" fill="#168de2"/></svg>
         <h1>YES</h1>
@@ -68,18 +70,28 @@
           serialize: function (elem) {
             return elem.listCountry
           },
-          search: function () {
+          reset: function () {
             document.body.classList.remove('yes');
             document.body.classList.remove('no');
-
-            this.entry = this.drinkTable.find((entry) => { return entry.listCountry == this.searchString });
+            window.history.replaceState({}, '', location.origin + '/');
+            this.hit = false;
+            this.entry = false;
+          },
+          search: function () {
+            this.reset();
+            this.entry = this.drinkTable.find((entry) => { return entry.listCountry.toLowerCase() == this.searchString.toLowerCase() });
             if (this.entry) {
               this.hit = true;
               window.history.replaceState({}, '', location.origin + '/' + this.searchString);
               document.body.classList.add((this.entry.Drinkable) ? 'yes': 'no');
             }
+          },
+        },
+        watch: {
+            searchString: function() {
+              this.search();
+            }
           }
-        }
       });
   </script>
 </body>
