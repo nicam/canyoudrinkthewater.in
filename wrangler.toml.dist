@@ -1,0 +1,6 @@
+name = "index"
+type = "javascript"
+account_id = "ADD-YOUR-ID-HERE"
+workers_dev = true
+route = ""
+zone_id = ""

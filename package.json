@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "canidrinkthewater-vue",
+  "version": "1.0.0",
+  "description": "Example on how to deploy vuejs apps on cloudflare for free!",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "serve",
+    "publish": "node build.js && wrangler publish",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write '**/*.{js,css,json,md}'"
+  },
+  "author": "Pascal Helfenstein <pascal.helfenstein@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^1.18.2",
+    "serve": "^11.3.0"
+  }
+}
